@@ -25,6 +25,7 @@ use crate::xlsx::XLSX;
 pub mod json_generator;
 pub mod lua_generator;
 pub mod python_generator;
+pub mod sql_generator;
 
 pub trait Generator<'a> {
     fn new(xlsx: &'a XLSX) -> Self;

@@ -6,7 +6,7 @@
 - [x] lua
 - [x] json
 - [x] python
-- [ ] sql
+- [x] sql
 - [ ] yaml
 
 ## 使用方法

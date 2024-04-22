@@ -169,6 +169,16 @@ impl XLSX {
         &self.values
     }
 
+    pub fn key_num(&self) -> u32 {
+        let mut num = 0;
+        for f in &self.fields {
+            if f.is_key_field() {
+                num += 1;
+            }
+        }
+        num
+    }
+
     pub fn parse_from_file(
         &mut self,
         path: &String,

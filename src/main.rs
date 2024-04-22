@@ -128,6 +128,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     if args.target == "python" || args.target == "all" {
         all.gen::<python_generator::PyGenerator>(&args.output)?;
     }
+    if args.target == "sql" || args.target == "all" {
+        all.gen::<sql_generator::SQLGenerator>(&args.output)?;
+    }
 
     let result = all.check_xlsx_valid();
     if let Err(e) = result {
