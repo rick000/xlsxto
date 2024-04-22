@@ -72,8 +72,7 @@ impl<'a> PyGenerator<'a> {
     ) -> Result<String, Box<dyn std::error::Error>> {
         let type_name = t.as_str();
         if type_name.contains("[]") {
-            let value = v.replace("[", "{").replace("]", "}");
-            return Ok(self.type_default_value(t, &value));
+            return Ok(self.type_default_value(t, &v));
         }
 
         if type_name.contains("string") {
