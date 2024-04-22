@@ -20,7 +20,5 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
-    - name: Run lua export
-      run: cargo run -- --input examples --output generated --target lua
-    - name: Run json export
-      run: cargo run -- --input examples --output generated --target json
+    - name: Run export
+      run: cargo run -- --input examples --output generated --target all

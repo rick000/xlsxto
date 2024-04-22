@@ -25,6 +25,7 @@ use std::collections::HashMap;
 use std::io::{Error, ErrorKind};
 
 use super::checker::{generate_checker, CheckObj};
+use crate::generator::Generator;
 use crate::get_project_name;
 
 #[derive(Debug)]
@@ -260,21 +261,20 @@ impl ALLXLSX {
         self.all.insert(String::from(name), file);
     }
 
-    pub fn gen_lua(&self, output: &String) -> Result<(), Box<dyn std::error::Error>> {
-        use super::generator::lua_generator::LuaGenerator;
+    pub fn gen<'a, T: Generator<'a>>(
+        &'a self,
+        output: &String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         for (name, xlsx) in self.all.iter() {
-            let mut generater = LuaGenerator::new(xlsx);
-            generater.generate(name, output, &self)?;
-        }
-
-        Ok(())
-    }
-
-    pub fn gen_json(&self, output: &String) -> Result<(), Box<dyn std::error::Error>> {
-        use super::generator::json_generator::JsonGenerator;
-        for (name, xlsx) in self.all.iter() {
-            let mut generater = JsonGenerator::new(xlsx);
-            generater.generate(name, output, &self)?;
+            let mut generator = T::new(xlsx);
+            let r = generator.generate(name, output, &self);
+            if let Err(e) = r {
+                let notify_error = super::notify_error_info(&e);
+                if let Err(s) = notify_error {
+                    log::error!("notify error occurred! {}", s);
+                }
+                return Err(e);
+            }
         }
         Ok(())
     }

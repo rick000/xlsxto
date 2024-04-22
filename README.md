@@ -1,13 +1,13 @@
 # xlsxto
 
-将excel表转换为json或配置代码
+将excel表转换为json、lua、python、sql、yaml...
 
 ## 支持的转出格式
 - [x] lua
 - [x] json
-- [ ] python
+- [x] python
 - [ ] sql
-- [ ] xml
+- [ ] yaml
 
 ## 使用方法
 ```bash

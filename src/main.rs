@@ -27,6 +27,7 @@ mod xlsx;
 
 use clap::Parser;
 use curl::easy::{Easy, List};
+use generator::*;
 use std::error::Error;
 use std::fs;
 use std::io::Read;
@@ -53,7 +54,9 @@ struct Args {
     project: String,
 }
 
-fn notify_error_info(url: &String, e: &Box<dyn Error>) -> Result<(), Box<dyn Error>> {
+fn notify_error_info(e: &Box<dyn Error>) -> Result<(), Box<dyn Error>> {
+    let args = Args::parse();
+    let url = &args.notify_url;
     if url.is_empty() || !url.starts_with("http") {
         log::error!("invalid notifiy url {}! error {}", url, e);
         return Ok(());
@@ -116,30 +119,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    if args.target == "lua" {
-        let result = all.gen_lua(&args.output);
-        if let Err(e) = result {
-            let notify_error = notify_error_info(&args.notify_url, &e);
-            if let Err(s) = notify_error {
-                log::error!("notify error occurred! {}", s);
-            }
-            return Err(e);
-        }
+    if args.target == "lua" || args.target == "all" {
+        all.gen::<lua_generator::LuaGenerator>(&args.output)?;
     }
-    if args.target == "json" {
-        let result = all.gen_json(&args.output);
-        if let Err(e) = result {
-            let notify_error = notify_error_info(&args.notify_url, &e);
-            if let Err(s) = notify_error {
-                log::error!("notify error occurred! {}", s);
-            }
-            return Err(e);
-        }
+    if args.target == "json" || args.target == "all" {
+        all.gen::<json_generator::JsonGenerator>(&args.output)?;
+    }
+    if args.target == "python" || args.target == "all" {
+        all.gen::<python_generator::PyGenerator>(&args.output)?;
     }
 
     let result = all.check_xlsx_valid();
     if let Err(e) = result {
-        let notify_error = notify_error_info(&args.notify_url, &e);
+        let notify_error = notify_error_info(&e);
         if let Err(s) = notify_error {
             log::error!("notify error occurred! {}", s);
         }

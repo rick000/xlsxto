@@ -20,6 +20,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+use super::Generator;
 use crate::{ALLXLSX, XLSX};
 use std::fs;
 use std::io::prelude::*;
@@ -36,10 +37,6 @@ fn replace_json_br(s: &str) -> String {
 }
 
 impl<'a> JsonGenerator<'a> {
-    pub fn new(xlsx: &'a XLSX) -> Self {
-        JsonGenerator { xlsx }
-    }
-
     fn type_default_value(&self, t: &String, v: &String) -> String {
         let trimd_str = v.trim();
         if !trimd_str.is_empty() {
@@ -104,18 +101,20 @@ impl<'a> JsonGenerator<'a> {
 
         Ok(ret_value)
     }
+}
 
-    pub fn generate(
+impl<'a> Generator<'a> for JsonGenerator<'a> {
+    fn new(xlsx: &'a XLSX) -> Self {
+        JsonGenerator { xlsx }
+    }
+
+    fn generate(
         &mut self,
         fname: &str,
         out_path: &String,
         _allxlsx: &ALLXLSX,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let json_file_name = format!(
-            "{}/{}.json",
-            out_path,
-            fname[..fname.len() - 5].to_string()
-        );
+        let json_file_name = format!("{}/{}.json", out_path, fname[..fname.len() - 5].to_string());
         let mut file_content = String::from("[");
 
         let mut line_prefix = String::from("");

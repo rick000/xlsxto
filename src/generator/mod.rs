@@ -20,5 +20,19 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+use crate::xlsx::XLSX;
+
 pub mod json_generator;
 pub mod lua_generator;
+pub mod python_generator;
+
+pub trait Generator<'a> {
+    fn new(xlsx: &'a XLSX) -> Self;
+
+    fn generate(
+        &mut self,
+        file_name: &str,
+        out_path: &String,
+        all: &super::ALLXLSX,
+    ) -> Result<(), Box<dyn std::error::Error>>;
+}
