@@ -165,7 +165,7 @@ impl<'a> Generator<'a> for PyGenerator<'a> {
                             ),
                         )));
                     }
-                    
+
                     let mut key_str = format!("{} : ", &key);
                     if key_num == 1 {
                         key_str = self.get_space_str(key_num * 2);
