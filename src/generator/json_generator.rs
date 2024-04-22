@@ -112,11 +112,11 @@ impl<'a> JsonGenerator<'a> {
         _allxlsx: &ALLXLSX,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let json_file_name = format!(
-            "{}/{}.bytes",
+            "{}/{}.json",
             out_path,
             fname[..fname.len() - 5].to_string()
         );
-        let mut file_content = String::from("{\n\"_entryList\":[");
+        let mut file_content = String::from("[");
 
         let mut line_prefix = String::from("");
         for row_values in self.xlsx.value_list() {
@@ -130,10 +130,7 @@ impl<'a> JsonGenerator<'a> {
                 )?;
                 line_content += &column_prefix;
                 line_content += "\"";
-                let mut name = field.get_field_name().clone();
-                if field.is_key_field() {
-                    name = String::from("Id")
-                }
+                let name = field.get_field_name().clone();
                 line_content += &name;
                 line_content += "\":";
                 line_content += &v;
@@ -145,7 +142,7 @@ impl<'a> JsonGenerator<'a> {
             file_content += &line_content;
         }
 
-        file_content += "\n]\n}";
+        file_content += "\n]";
 
         let mut f = fs::File::create(json_file_name)?;
         f.write(file_content.as_bytes())?;

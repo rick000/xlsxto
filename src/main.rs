@@ -55,7 +55,7 @@ struct Args {
 
 fn notify_error_info(url: &String, e: &Box<dyn Error>) -> Result<(), Box<dyn Error>> {
     if url.is_empty() || !url.starts_with("http") {
-        println!("invalid notifiy url {}! error {}", url, e);
+        log::error!("invalid notifiy url {}! error {}", url, e);
         return Ok(());
     }
 
@@ -94,6 +94,7 @@ ___  __|  |   _________  ____/  |_  ____           _______|__| ____ |  | _|  |__
 ";
 
 fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
     let args = Args::parse();
     println!(
         "{} xlsx path={}, output path={}",
@@ -120,7 +121,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if let Err(e) = result {
             let notify_error = notify_error_info(&args.notify_url, &e);
             if let Err(s) = notify_error {
-                println!("notify error occurred! {}", s);
+                log::error!("notify error occurred! {}", s);
             }
             return Err(e);
         }
@@ -130,7 +131,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if let Err(e) = result {
             let notify_error = notify_error_info(&args.notify_url, &e);
             if let Err(s) = notify_error {
-                println!("notify error occurred! {}", s);
+                log::error!("notify error occurred! {}", s);
             }
             return Err(e);
         }
@@ -140,7 +141,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     if let Err(e) = result {
         let notify_error = notify_error_info(&args.notify_url, &e);
         if let Err(s) = notify_error {
-            println!("notify error occurred! {}", s);
+            log::error!("notify error occurred! {}", s);
         }
         return Err(e);
     }

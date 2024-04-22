@@ -296,7 +296,7 @@ impl<'a> LuaGenerator<'a> {
                 check_line += "}";
                 let result = self.check_lua_file_valid(&check_line, &xlsfilename, &line_key);
                 if let Err(e) = result {
-                    println!("invalid config xls={} line = {}", fname, &line_str);
+                    log::error!("invalid config xls={} line = {}", fname, &line_str);
                     return Err(e);
                 }
                 file_content += &line_str;
