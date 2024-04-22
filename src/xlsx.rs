@@ -62,10 +62,8 @@ impl XlsTabField {
             || self.field_name == "ID"
     }
 
-    pub fn is_remark_field(&self, target: &String) -> bool {
+    pub fn is_remark_field(&self, _target: &String) -> bool {
         self.client_server == "none"
-            || (target == "lua" && self.client_server == "client")
-            || ((target == "json" || target == "csharp") && self.client_server == "server")
     }
 
     pub fn is_invalid_field(&self) -> bool {
